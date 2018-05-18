@@ -1,22 +1,16 @@
 <template lang="pug">
   #app
-    h1 {{ message }}
-    input(type="text" v-model="message")
-
-    StreamDeck
+    StreamDeck(:streamDeck="selectedStreamDeck")
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import StreamDeck from './components/StreamDeck.vue'
 
   export default {
     components: { StreamDeck },
 
-    data() {
-      return {
-        message: 'Hi from app'
-      }
-    }
+    computed: mapGetters(['selectedStreamDeck'])
   }
 </script>
 

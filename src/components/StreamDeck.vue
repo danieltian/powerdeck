@@ -1,14 +1,21 @@
 <template lang="pug">
   .stream-deck
-    | Count: {{ count }}
-    button(@click="increment") Increment
+    .row(v-for="i in streamDeck.rows")
+      StreamDeckButton(v-for="j in streamDeck.columns")
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import StreamDeckButton from './StreamDeckButton.vue'
 
   export default {
-    computed: mapState(['count']),
+    components: { StreamDeckButton },
+    props: {
+      streamDeck: {
+        type: Object,
+        required: true
+      }
+    },
 
     methods: {
       increment() {
@@ -20,8 +27,20 @@
 
 <style lang="stylus">
   .stream-deck
-    background: linear-gradient(#dcdcdc, #fefefe)
-    width: 500px
-    height: 500px
-    border-radius: 0.5em
+    background: linear-gradient(#101011, #3e3c3f)
+    width: 400px
+    height: 250px
+    border-radius: 0.25em
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+
+    .row {
+      display: flex;
+    }
+
+    .stream-deck-button {
+      margin: 0.7em
+    }
 </style>

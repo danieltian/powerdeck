@@ -12,9 +12,21 @@ import App from './App.vue'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  strict: process.env.NODE_ENV == 'development',
+
   state: {
-    count: 0
+    streamDecks: [{
+      rows: 3,
+      columns: 5
+    }]
   },
+
+  getters: {
+    selectedStreamDeck(state) {
+      return state.streamDecks[0]
+    }
+  },
+
   mutations: {
     increment(state) {
       state.count++
