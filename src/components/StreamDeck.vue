@@ -1,7 +1,7 @@
 <template lang="pug">
   .stream-deck
-    .row(v-for="i in streamDeck.rows")
-      StreamDeckButton(v-for="j in streamDeck.columns")
+    .row(v-for="i in streamDeck.rows" :key="i")
+      StreamDeckButton(v-for="j in streamDeck.columns" :key="j")
 </template>
 
 <script>
