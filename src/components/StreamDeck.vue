@@ -1,10 +1,20 @@
 <template lang="pug">
   .stream-deck
+    | Count: {{ count }}
+    button(@click="increment") Increment
 </template>
 
 <script>
-  export default {
+  import { mapState } from 'vuex'
 
+  export default {
+    computed: mapState(['count']),
+
+    methods: {
+      increment() {
+        this.$store.commit('increment')
+      }
+    }
   }
 </script>
 

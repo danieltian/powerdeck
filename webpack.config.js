@@ -1,10 +1,14 @@
-const { HotModuleReplacementPlugin, NamedModulesPlugin } = require('webpack')
+const path = require('path')
+const { HotModuleReplacementPlugin } = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const eslintFormatterPretty = require('eslint-formatter-pretty')
 
 module.exports = {
   mode: 'development',
   target: 'electron-renderer',
+  devtool: 'inline-source-map',
+
   entry: [
     './src/index.js',
     'webpack/hot/dev-server',
@@ -12,13 +16,12 @@ module.exports = {
   ],
 
   output: {
-    path: __dirname,
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
 
   plugins: [
     new HotModuleReplacementPlugin(),
-    new NamedModulesPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin()
   ],
@@ -26,11 +29,20 @@ module.exports = {
   devServer: {
     hot: true,
     overlay: true,
+    noInfo: true,
     stats: 'minimal'
   },
 
   module: {
     rules: [
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        options: {
+          formatter: eslintFormatterPretty
+        }
+      },
       {
         test: /\.vue$/,
         use: 'vue-loader'
