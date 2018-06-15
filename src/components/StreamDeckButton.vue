@@ -1,10 +1,25 @@
 <template lang="pug">
-  .stream-deck-button
+  .stream-deck-button(@mousedown="mouseDown" @mouseleave="mouseUp" @mouseup="mouseUp")
 </template>
 
 <script>
   export default {
+    props: {
+      buttonNumber: {
+        type: Number,
+        required: true
+      }
+    },
 
+    methods: {
+      mouseDown() {
+        this.$store.commit('mouseDown', this.buttonNumber)
+      },
+
+      mouseUp() {
+        this.$store.commit('mouseUp', this.buttonNumber)
+      }
+    }
   }
 </script>
 

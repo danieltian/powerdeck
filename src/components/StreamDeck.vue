@@ -1,7 +1,6 @@
 <template lang="pug">
-  .stream-deck
-    .row(v-for="i in streamDeck.rows" :key="i")
-      StreamDeckButton(v-for="j in streamDeck.columns" :key="j")
+  .stream-deck(v-bind:style="{ 'grid-template': gridTemplate }")
+    StreamDeckButton(v-for="buttonNumber in streamDeck.buttonCount" :buttonNumber="buttonNumber" :key="buttonNumber")
 </template>
 
 <script>
@@ -17,6 +16,12 @@
       }
     },
 
+    computed: {
+      gridTemplate() {
+        return `repeat(${this.streamDeck.rows}, 1fr) / repeat(${this.streamDeck.columns}, 1fr)`
+      }
+    },
+
     methods: {
       increment() {
         this.$store.commit('increment')
@@ -28,19 +33,11 @@
 <style lang="stylus">
   .stream-deck
     background: linear-gradient(#101011, #3e3c3f)
-    width: 400px
-    height: 250px
-    border-radius: 0.25em
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-
-    .row {
-      display: flex;
-    }
+    padding: 1em
+    border-radius: 0.6em
+    display: inline-grid
 
     .stream-deck-button {
-      margin: 0.7em
+      margin: 0.8em
     }
 </style>

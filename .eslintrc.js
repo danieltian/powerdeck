@@ -15,6 +15,12 @@ module.exports = {
     // Require parenthesis around arrow function parameters: https://eslint.org/docs/rules/arrow-parens
     'arrow-parens': ['error', 'always'],
     // Require spaces around the arrow part of the arrow function: https://eslint.org/docs/rules/arrow-spacing
-    'arrow-spacing': ['error', { before: true, after: true }]
+    'arrow-spacing': ['error', { before: true, after: true }],
+    // Don't allow commas after the last item for objects and arrays: https://eslint.org/docs/rules/comma-dangle
+    'comma-dangle': ['warn', 'never'],
+    // Comments must have a space after the double-slash: https://eslint.org/docs/rules/spaced-comment
+    'spaced-comment': ['warn', 'always'],
+    // Comments must always start with a capital letter: https://eslint.org/docs/rules/capitalized-comments
+    'capitalized-comments': ['warn', 'always', { ignoreConsecutiveComments: true }]
   }
 }
