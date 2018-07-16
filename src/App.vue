@@ -9,7 +9,6 @@
 
   export default {
     components: { StreamDeck },
-
     computed: mapGetters(['selectedStreamDeck'])
   }
 </script>

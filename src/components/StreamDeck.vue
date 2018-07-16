@@ -1,6 +1,6 @@
 <template lang="pug">
   .stream-deck(v-bind:style="{ 'grid-template': gridTemplate }")
-    StreamDeckButton(v-for="buttonNumber in streamDeck.buttonCount" :buttonNumber="buttonNumber" :key="buttonNumber")
+    StreamDeckButton(v-for="button in streamDeck.buttons" :button="button" :isSelected="button == selectedButton" :key="button.number")
 </template>
 
 <script>
@@ -19,7 +19,9 @@
     computed: {
       gridTemplate() {
         return `repeat(${this.streamDeck.rows}, 1fr) / repeat(${this.streamDeck.columns}, 1fr)`
-      }
+      },
+
+      ...mapState(['selectedButton'])
     },
 
     methods: {
