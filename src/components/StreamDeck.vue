@@ -1,5 +1,5 @@
 <template lang="pug">
-  .stream-deck(v-bind:style="{ 'grid-template': gridTemplate }")
+  .stream-deck(:style="{ 'grid-template': gridTemplate }")
     StreamDeckButton(v-for="button in streamDeck.buttons" :button="button" :isSelected="button == selectedButton" :key="button.number")
 </template>
 
@@ -32,14 +32,13 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   .stream-deck
     background: linear-gradient(#101011, #3e3c3f)
     padding: 1em
     border-radius: 0.6em
     display: inline-grid
 
-    .stream-deck-button {
+    .stream-deck-button
       margin: 0.8em
-    }
 </style>

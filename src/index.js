@@ -6,14 +6,6 @@ import { remote } from 'electron'
 const StreamDeckApi = remote.require('stream-deck-api')
 const streamDeck = StreamDeckApi.getStreamDeck()
 
-// TODO: Use this for now until we need a more custom index.html page.
-// NOTE: Leading semi-colon is needed, otherwise it acts like a function call for the previous line.
-;(function () {
-  var div = document.createElement('div')
-  div.id = 'app'
-  document.body.appendChild(div)
-})()
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -53,6 +45,11 @@ const store = new Vuex.Store({
 
     mouseUp(state, button) {
       streamDeck.drawColor(0x000000, button.number)
+    },
+
+    drawImage(state, payload) {
+      if (!state.selectedButton) { return }
+      streamDeck.drawImageBuffer(payload.buffer, state.selectedButton.number)
     }
   }
 })

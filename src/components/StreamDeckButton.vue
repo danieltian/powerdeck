@@ -28,7 +28,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   .stream-deck-button
     width: 50px
     height: 50px

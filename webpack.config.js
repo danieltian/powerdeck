@@ -23,14 +23,15 @@ module.exports = {
   plugins: [
     new HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src', 'index.html')
+    })
   ],
 
   devServer: {
     hot: true,
     overlay: true,
-    noInfo: true,
-    stats: 'minimal'
+    stats: 'errors-only'
   },
 
   module: {
