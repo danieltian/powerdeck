@@ -1,5 +1,5 @@
 <template lang="pug">
-  .stream-deck-button(:class="{ selected: isSelected }" @mousedown="mouseDown" @mouseleave="mouseUp" @mouseup="mouseUp")
+  .stream-deck-button(:class="{ selected: isSelected }" @mousedown="mouseDown" @mouseup="mouseUp")
 </template>
 
 <script>

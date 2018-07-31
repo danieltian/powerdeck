@@ -48,6 +48,7 @@ const store = new Vuex.Store({
     },
 
     drawImage(state, payload) {
+      console.log('drawImage', payload, state.selectedButton)
       if (!state.selectedButton) { return }
       streamDeck.drawImageBuffer(payload.buffer, state.selectedButton.number)
     }
