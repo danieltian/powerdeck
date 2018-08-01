@@ -21,6 +21,8 @@ module.exports = {
     // Comments must have a space after the double-slash: https://eslint.org/docs/rules/spaced-comment
     'spaced-comment': ['warn', 'always'],
     // Comments must always start with a capital letter: https://eslint.org/docs/rules/capitalized-comments
-    'capitalized-comments': ['warn', 'always', { ignoreConsecutiveComments: true }]
+    'capitalized-comments': ['warn', 'always', { ignoreConsecutiveComments: true }],
+    // Indentation in Vue templates must always be 2 spaces, no tabs: https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/script-indent.md
+    'vue/script-indent': ['error', 2, { baseIndent: 1, switchCase: 1 }]
   }
 }

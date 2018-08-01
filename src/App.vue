@@ -1,17 +1,20 @@
 <template lang="pug">
   #app
     StreamDeck(:streamDeck="selectedStreamDeck")
-    ImagePicker
+    ImagePicker(v-if="selectedButton" :button="selectedButton")
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
   import StreamDeck from './components/StreamDeck.vue'
   import ImagePicker from './plugins/display/ImagePicker.vue'
 
   export default {
     components: { StreamDeck, ImagePicker },
-    computed: mapGetters(['selectedStreamDeck'])
+    computed: {
+      ...mapState(['selectedButton']),
+      ...mapGetters(['selectedStreamDeck'])
+    }
   }
 </script>
 

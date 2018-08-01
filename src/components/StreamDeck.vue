@@ -1,6 +1,6 @@
 <template lang="pug">
   .stream-deck(:style="{ 'grid-template': gridTemplate }")
-    StreamDeckButton(v-for="button in streamDeck.buttons" :button="button" :isSelected="button == selectedButton" :key="button.number")
+    StreamDeckButton(v-for="button in streamDeck.buttons" :button="button" :selected="button == selectedButton" :key="button.number")
 </template>
 
 <script>

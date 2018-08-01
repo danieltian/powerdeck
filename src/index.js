@@ -30,7 +30,25 @@ const store = new Vuex.Store({
       streamDeck.buttons = new Array(streamDeck.buttonCount)
 
       for (let i = 0; i < streamDeck.buttonCount; i++) {
-        streamDeck.buttons[i] = { number: i + 1 }
+        streamDeck.buttons[i] = {
+          number: i + 1,
+          image: {
+            sourceFile: undefined,
+            sourceBitmap: undefined,
+            dataUrl: undefined,
+            options: {
+              resize: 'fit',
+              anchor: {
+                horizontal: 'center',
+                vertical: 'middle'
+              },
+              shift: {
+                x: 0,
+                y: 0
+              }
+            }
+          }
+        }
       }
 
       return streamDeck
@@ -38,19 +56,33 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    mouseDown(state, button) {
-      streamDeck.drawColor(0xFFFFFF, button.number)
+    selectButton(state, button) {
       state.selectedButton = button
     },
 
-    mouseUp(state, button) {
-      streamDeck.drawColor(0x000000, button.number)
+    drawImage(state, buffer) {
+      if (!state.selectedButton) { return }
+      streamDeck.drawImageBuffer(buffer, state.selectedButton.number)
     },
 
-    drawImage(state, payload) {
-      console.log('drawImage', payload, state.selectedButton)
-      if (!state.selectedButton) { return }
-      streamDeck.drawImageBuffer(payload.buffer, state.selectedButton.number)
+    setImage(state, bitmap) {
+      state.selectedButton.image.sourceBitmap = bitmap
+    },
+
+    updateImageOptions(state, options) {
+      state.selectedButton.image.options = options
+    },
+
+    saveDataURL(state, dataUrl) {
+      state.selectedButton.image.dataUrl = dataUrl
+    }
+  },
+
+  actions: {
+    loadImage({ commit }, file) {
+      createImageBitmap(file).then((bitmap) => {
+        commit('setImage', bitmap)
+      })
     }
   }
 })
@@ -59,4 +91,8 @@ new Vue({
   el: '#app',
   store,
   render: (h) => h(App)
+})
+
+window.addEventListener('unload', () => {
+  streamDeck.reset()
 })

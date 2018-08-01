@@ -1,5 +1,6 @@
 <template lang="pug">
-  .stream-deck-button(:class="{ selected: isSelected }" @mousedown="mouseDown" @mouseup="mouseUp")
+  .stream-deck-button(:class="{ selected }" @click="selectButton")
+    img.image(:src="button.image.dataUrl")
 </template>
 
 <script>
@@ -9,7 +10,7 @@
         type: Object,
         required: true
       },
-      isSelected: {
+      selected: {
         type: Boolean,
         required: false,
         default: false
@@ -17,12 +18,8 @@
     },
 
     methods: {
-      mouseDown() {
-        this.$store.commit('mouseDown', this.button)
-      },
-
-      mouseUp() {
-        this.$store.commit('mouseUp', this.button)
+      selectButton() {
+        this.$store.commit('selectButton', this.button)
       }
     }
   }
@@ -39,4 +36,8 @@
 
     &.selected
       box-shadow: 0 0 5px 5px #639FFF
+
+    .image
+      width: 100%
+      height: 100%
 </style>

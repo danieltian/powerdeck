@@ -4,32 +4,38 @@
     canvas.canvas(ref="canvas" width="72" height="72")
 
     .resize
-        .resize-option
-          input(type="radio" id="fit" value="fit" v-model="selectedResize")
-          label(for="fit") Fit entire image within button (preserves aspect ratio)
-        .resize-option
-          input(type="radio" id="cover" value="cover" v-model="selectedResize")
-          label(for="cover") Fill entire button with image (preserves aspect ratio)
-        .resize-option
-          input(type="radio" id="contain" value="contain" v-model="selectedResize")
-          label(for="contain") Squeeze image into button size (aspect ratio not preserved)
-        .resize-option
-          input(type="radio" id="resize" value="resize" v-model="selectedResize")
-          label(for="resize") Resize image
+      .resize-option
+        input(type="radio" id="fit" value="fit" v-model="resize")
+        label(for="fit") Fit entire image within button (preserves aspect ratio)
+      .resize-option
+        input(type="radio" id="cover" value="cover" v-model="resize")
+        label(for="cover") Fill entire button with image (preserves aspect ratio)
+      .resize-option
+        input(type="radio" id="contain" value="contain" v-model="resize")
+        label(for="contain") Squeeze image into button size (aspect ratio not preserved)
+      .resize-option
+        input(type="radio" id="resize" value="resize" v-model="resize")
+        label(for="resize") Resize image
 
     .anchor(@click="setAnchorPoint")
       .anchor-row
-        AnchorPoint(position="top left" :selected="selectedAnchor" icon="🡬")
-        AnchorPoint(position="top center" :selected="selectedAnchor" icon="🡩")
-        AnchorPoint(position="top right" :selected="selectedAnchor" icon="🡭")
+        AnchorPoint(:position="{ vertical: 'top', horizontal: 'left' }" :selected="options.anchor" icon="🡬")
+        AnchorPoint(:position="{ vertical: 'top', horizontal: 'center' }" :selected="options.anchor" icon="🡩")
+        AnchorPoint(:position="{ vertical: 'top', horizontal: 'right' }" :selected="options.anchor" icon="🡭")
       .anchor-row
-        AnchorPoint(position="middle left" :selected="selectedAnchor" icon="🡨")
-        AnchorPoint(position="middle center" :selected="selectedAnchor" icon="⏺")
-        AnchorPoint(position="middle right" :selected="selectedAnchor" icon="🡪")
+        AnchorPoint(:position="{ vertical: 'middle', horizontal: 'left' }" :selected="options.anchor" icon="🡨")
+        AnchorPoint(:position="{ vertical: 'middle', horizontal: 'center' }" :selected="options.anchor" icon="⏺")
+        AnchorPoint(:position="{ vertical: 'middle', horizontal: 'right' }" :selected="options.anchor" icon="🡪")
       .anchor-row
-        AnchorPoint(position="bottom left" :selected="selectedAnchor" icon="🡯")
-        AnchorPoint(position="bottom center" :selected="selectedAnchor" icon="🡫")
-        AnchorPoint(position="bottom right" :selected="selectedAnchor" icon="🡮")
+        AnchorPoint(:position="{ vertical: 'bottom', horizontal: 'left' }" :selected="options.anchor" icon="🡯")
+        AnchorPoint(:position="{ vertical: 'bottom', horizontal: 'center' }" :selected="options.anchor" icon="🡫")
+        AnchorPoint(:position="{ vertical: 'bottom', horizontal: 'right' }" :selected="options.anchor" icon="🡮")
+
+    .shift
+      label X:
+      input(type="number" v-model.number="shiftX")
+      label Y:
+      input(type="number" v-model.number="shiftY")
 </template>
 
 <script>
@@ -39,57 +45,83 @@
   export default {
     components: { AnchorPoint },
 
-    data() {
-      return {
-        selectedAnchor: 'middle center',
-        selectedResize: 'fit'
+    props: {
+      button: {
+        type: Object,
+        required: true
       }
     },
 
     computed: {
-      anchor() {
-        let parts = this.selectedAnchor.split(' ')
-        return {
-          vertical: parts[0],
-          horizontal: parts[1]
+      canvas() {
+        let canvas = new CanvasDraw(this.$refs.canvas)
+        return canvas
+      },
+
+      options() {
+        return this.button.image.options
+      },
+
+      resize: {
+        get() {
+          return this.options.resize
+        },
+        set(value) {
+          let options = Object.assign({}, this.options)
+          options.resize = value
+          this.$store.commit('updateImageOptions', options)
         }
+      },
+
+      shiftX: {
+        get() {
+          return this.options.shift.x
+        },
+        set(value) {
+          let options = Object.assign({}, this.options)
+          options.shift.x = value
+          this.$store.commit('updateImageOptions', options)
+        }
+      },
+
+      shiftY: {
+        get() {
+          return this.options.shift.y
+        },
+        set(value) {
+          let options = Object.assign({}, this.options)
+          options.shift.y = value
+          this.$store.commit('updateImageOptions', options)
+        }
+      }
+    },
+
+    watch: {
+      'button.image.sourceBitmap'() {
+        this.canvas.clear()
+        this.canvas.drawImage(this.button.image)
+        this.$store.commit('saveDataURL', this.canvas.toDataURL())
+        this.$store.commit('drawImage', this.canvas.getImageData())
+      },
+
+      'button.image.options'() {
+        this.canvas.clear()
+        this.canvas.drawImage(this.button.image)
+        this.$store.commit('saveDataURL', this.canvas.toDataURL())
+        this.$store.commit('drawImage', this.canvas.getImageData())
       }
     },
 
     methods: {
       onChange(e) {
-        let file = e.target.files[0]
-        if (!file) { return }
-
-        let reader = new FileReader()
-        let image = new Image()
-
-        reader.addEventListener('load', () => {
-          image.addEventListener('load', () => {
-            var canvas = new CanvasDraw(this.$refs.canvas)
-            canvas.clear()
-            canvas.drawImage(image, {
-              resize: this.selectedResize,
-              anchor: this.anchor
-            })
-
-            let imageData = canvas.getImageData()
-
-            this.$store.commit('drawImage', {
-              buffer: imageData,
-              buttonNumber: 1
-            })
-          })
-
-          e.target.value = null
-          image.src = reader.result
-        })
-
-        reader.readAsDataURL(file)
+        this.$store.dispatch('loadImage', e.target.files[0])
       },
 
       setAnchorPoint(e) {
-        this.selectedAnchor = e.target.getAttribute('position')
+        let options = Object.assign({}, this.button.image.options)
+        options.anchor = e.position
+        console.log('set anchor point', options)
+        this.$store.commit('updateImageOptions', options)
       }
     }
   }
